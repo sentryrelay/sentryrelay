@@ -1,0 +1,59 @@
+name: Release Public Packages (npm + PyPI + MCP Registry)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish-npm:
+    name: Publish TypeScript Packages to npm (OIDC + Provenance)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Ensure npm >= 11.5.1 for OIDC Trusted Publishing
+        run: npm install -g npm@latest && npm --version
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run test
+      - name: Publish @sentryrelay/sdk, @sentryrelay/mcp, and sentryrelay CLI via OIDC
+        run: |
+          mkdir -p /tmp/npm-dist
+          for pkg_dir in packages/sdk packages/mcp packages/cli; do
+            pkg_name=$(node -p "require('./${pkg_dir}/package.json').name")
+            pkg_ver=$(node -p "require('./${pkg_dir}/package.json').version")
+            if npm view "${pkg_name}@${pkg_ver}" version >/dev/null 2>&1; then
+              echo "Skipping ${pkg_name}@${pkg_ver} (already published on npm)"
+            else
+              rm -f /tmp/npm-dist/*.tgz
+              (cd "$pkg_dir" && pnpm pack --pack-destination /tmp/npm-dist)
+              tarball=$(ls /tmp/npm-dist/*.tgz)
+              echo "Publishing ${pkg_name}@${pkg_ver} (${tarball}) via OIDC Trusted Publishing..."
+              npm publish "$tarball" --provenance --access public
+            fi
+          done
+
+  publish-pypi:
+    name: Build & Publish Python SDK to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - name: Build Python Wheel and sdist
+        working-directory: packages/python-sdk
+        run: uv build
+      - name: Publish to PyPI via Trusted Publisher (OIDC)
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/python-sdk/dist/
+          skip-existing: true

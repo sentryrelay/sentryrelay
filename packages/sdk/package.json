@@ -1,0 +1,52 @@
+{
+  "name": "@sentryrelay/sdk",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Official TypeScript & Node.js SDK for Sentry Relay — Out-of-Band 2FA, OTP, Magic-Link & TOTP Authenticator Relay for Autonomous Agents",
+  "license": "MIT",
+  "homepage": "https://sentryrelay.com/docs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sentryrelay/sentryrelay.git",
+    "directory": "packages/sdk"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "sentryrelay",
+    "2fa",
+    "otp",
+    "totp",
+    "magic-link",
+    "playwright",
+    "stagehand",
+    "browserbase",
+    "ai-agents",
+    "browser-automation"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

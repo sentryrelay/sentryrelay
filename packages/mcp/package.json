@@ -1,0 +1,66 @@
+{
+  "name": "@sentryrelay/mcp",
+  "version": "0.2.0",
+  "mcpName": "io.github.sentryrelay/sentryrelay",
+  "type": "module",
+  "description": "Official Model Context Protocol (MCP) server and tool registry for Sentry Relay — 2FA, OTP, Magic-Link & TOTP tools for AI Agents",
+  "license": "MIT",
+  "homepage": "https://sentryrelay.com/docs/mcp",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sentryrelay/sentryrelay.git",
+    "directory": "packages/mcp"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "mcp-server",
+    "sentryrelay",
+    "2fa",
+    "otp",
+    "totp",
+    "magic-link",
+    "ai-agents",
+    "claude-code",
+    "cursor",
+    "playwright",
+    "stagehand",
+    "browser-use"
+  ],
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "bin": {
+    "sentryrelay-mcp": "./dist/bin/sentryrelay-mcp.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "server.json",
+    "glama.json",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.2",
+    "@sentryrelay/sdk": "workspace:*"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

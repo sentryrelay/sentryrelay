@@ -1,0 +1,42 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "name": "io.github.sentryrelay/sentryrelay",
+  "description": "Out-of-Band 2FA, OTP, Magic-Link & Cloud KMS TOTP Authenticator Relay for Autonomous AI Agents",
+  "version": "0.2.0",
+  "repository": {
+    "url": "https://github.com/sentryrelay/sentryrelay",
+    "source": "github"
+  },
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "@sentryrelay/mcp",
+      "version": "0.2.0",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "SENTRY_RELAY_API_KEY",
+          "description": "Sentry Relay API key (sr_live_... or sr_test_...)",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ],
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://sentryrelay.com/api/mcp",
+      "headers": [
+        {
+          "name": "Authorization",
+          "description": "Bearer sr_live_... API key",
+          "isRequired": true,
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}
