@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sentryrelay": {
+      "command": "npx",
+      "args": ["-y", "@sentryrelay/mcp"],
+      "env": {
+        "SENTRY_RELAY_API_KEY": "${SENTRY_RELAY_API_KEY}"
+      }
+    }
+  }
+}

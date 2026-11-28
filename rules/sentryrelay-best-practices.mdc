@@ -1,0 +1,14 @@
+---
+description: "Sentry Relay security and reliability best practices for unattended 2FA, Email OTP, SMS DID, Magic-Link, and Cloud KMS TOTP integrations."
+alwaysApply: false
+---
+
+# Sentry Relay Security & Reliability Rules
+
+When generating or reviewing code that uses **Sentry Relay**:
+
+1. **Never hardcode API keys or TOTP secrets:** Always reference `SENTRY_RELAY_API_KEY` (`sr_live_...` or `sr_test_...`) from environment variables or a secret manager. Never paste Base32 TOTP seeds directly into client scripts—vault them once in Cloud KMS via `srelay totp add` or the Console.
+2. **Capture `since = Date.now()` before triggering 2FA:** Record the timestamp immediately before submitting the login form or clicking "Send Code" so parallel runs only claim codes generated for the active login attempt.
+3. **Always use `@in.sentryrelay.com` for inbound Identity emails:** Identity addresses use `<handle>@in.sentryrelay.com` (never `@sentryrelay.com` or `@inbound.sentryrelay.com`).
+4. **Use rollover-safe TOTP calls (`autoWaitFreshWindow: true`):** Always retrieve TOTP tokens via `relay.totp.get()` or MCP `get_totp_code` right before filling the input field so codes with `<=4s` remaining roll forward automatically.
+5. **Isolate multi-client agencies with `scopedIdentityIds`:** Issue one scoped API key per client Identity (`POST /api/console/keys`) so client workers cannot access another client's verification stream.

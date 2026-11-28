@@ -1,0 +1,13 @@
+{
+  "name": "sentryrelay",
+  "owner": {
+    "name": "Sentry Relay"
+  },
+  "plugins": [
+    {
+      "name": "sentryrelay",
+      "source": "./",
+      "description": "Out-of-band 2FA, Email OTP, Magic-Link, dedicated US SMS DID, and Cloud KMS TOTP relay for autonomous AI browser agents."
+    }
+  ]
+}

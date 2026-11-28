@@ -1,0 +1,28 @@
+{
+  "name": "sentryrelay-ecosystem",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Official SDKs (TypeScript & Python), Model Context Protocol (MCP) Server, srelay CLI, and Agent Skill for Sentry Relay (sentryrelay.com)",
+  "license": "MIT",
+  "homepage": "https://sentryrelay.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sentryrelay/sentryrelay.git"
+  },
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "scripts": {
+    "build": "pnpm --filter @sentryrelay/sdk run build && pnpm --filter @sentryrelay/mcp run build && pnpm --filter sentryrelay run build",
+    "typecheck": "pnpm -r run typecheck",
+    "test": "pnpm -r run test",
+    "test:python": "cd packages/python-sdk && uv run pytest"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

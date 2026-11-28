@@ -1,0 +1,33 @@
+{
+  "$schema": "https://code.claude.com/schemas/plugin.json",
+  "name": "sentryrelay",
+  "displayName": "Sentry Relay",
+  "version": "0.2.1",
+  "description": "Out-of-band 2FA, Email OTP, Magic-Link, dedicated US SMS DID, and Cloud KMS TOTP relay for autonomous AI browser agents and coding workflows.",
+  "skills": "./skills/",
+  "agents": "./agents/",
+  "mcpServers": "./.mcp.json",
+  "icon": "./assets/logo.svg",
+  "author": {
+    "name": "Sentry Relay",
+    "email": "support@sentryrelay.com",
+    "url": "https://sentryrelay.com"
+  },
+  "homepage": "https://sentryrelay.com",
+  "repository": "https://github.com/sentryrelay/sentryrelay",
+  "privacyPolicyUrl": "https://sentryrelay.com/privacy",
+  "license": "MIT",
+  "keywords": [
+    "sentryrelay",
+    "2fa",
+    "otp",
+    "totp",
+    "sms",
+    "magic-link",
+    "playwright",
+    "stagehand",
+    "browser-use",
+    "browserbase",
+    "mcp"
+  ]
+}

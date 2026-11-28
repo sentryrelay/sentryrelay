@@ -1,0 +1,12 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/mcp.schema.json",
+  "mcpServers": {
+    "sentryrelay": {
+      "type": "streamable-http",
+      "url": "https://sentryrelay.com/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${SENTRY_RELAY_API_KEY}"
+      }
+    }
+  }
+}

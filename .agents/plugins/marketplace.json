@@ -1,0 +1,21 @@
+{
+  "name": "sentryrelay",
+  "interface": {
+    "displayName": "Sentry Relay"
+  },
+  "plugins": [
+    {
+      "name": "sentryrelay",
+      "source": {
+        "source": "url",
+        "url": "https://github.com/sentryrelay/sentryrelay.git",
+        "ref": "main"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

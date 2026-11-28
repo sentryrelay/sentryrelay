@@ -1,0 +1,48 @@
+{
+  "name": "sentryrelay",
+  "version": "0.2.1",
+  "description": "Out-of-band 2FA, Email OTP, Magic-Link, dedicated US SMS DID, and Cloud KMS TOTP relay for autonomous AI browser agents.",
+  "author": {
+    "name": "Sentry Relay",
+    "email": "support@sentryrelay.com",
+    "url": "https://sentryrelay.com"
+  },
+  "homepage": "https://sentryrelay.com",
+  "repository": "https://github.com/sentryrelay/sentryrelay",
+  "license": "MIT",
+  "keywords": [
+    "sentryrelay",
+    "2fa",
+    "otp",
+    "totp",
+    "sms",
+    "magic-link",
+    "playwright",
+    "stagehand",
+    "browser-use",
+    "browserbase",
+    "mcp"
+  ],
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "interface": {
+    "displayName": "Sentry Relay",
+    "shortDescription": "Unattended 2FA, OTP & TOTP relay for agents",
+    "longDescription": "Eliminate 2FA walls in headless browsers and coding agents. Bundles the Sentry Relay MCP server (stdio + hosted /api/mcp), 3 agent skills (core, browser 2FA, multi-client agency forwarding), and the 2FA integration architect subagent.",
+    "developerName": "Sentry Relay",
+    "category": "Developer Tools",
+    "capabilities": ["Read", "Write"],
+    "websiteURL": "https://sentryrelay.com",
+    "privacyPolicyURL": "https://sentryrelay.com/privacy",
+    "termsOfServiceURL": "https://sentryrelay.com/terms",
+    "defaultPrompt": [
+      "Wire Sentry Relay into this Playwright or Stagehand login script to resolve Email/SMS 2FA in <200ms",
+      "Add Browser Use 2FA actions (wait_for_2fa_code and get_totp_token) using sentryrelay-sdk",
+      "Set up multi-client 60-second Gmail forwarding and scoped API keys for our n8n/Apify workflows"
+    ],
+    "brandColor": "#10B981",
+    "composerIcon": "./assets/logo.svg",
+    "logo": "./assets/logo.svg",
+    "screenshots": []
+  }
+}

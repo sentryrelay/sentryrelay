@@ -1,0 +1,125 @@
+name: Release Public Packages (npm + PyPI + MCP Registry)
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish-npm:
+    name: Publish TypeScript Packages to npm (OIDC + Provenance)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - name: Ensure npm >= 11.5.1 for OIDC Trusted Publishing
+        run: npm install -g npm@latest && npm --version
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm run build
+      - run: pnpm run test
+      - name: Publish @sentryrelay/sdk, @sentryrelay/mcp, and sentryrelay CLI via OIDC
+        run: |
+          mkdir -p /tmp/npm-dist
+          for pkg_dir in packages/sdk packages/mcp packages/cli; do
+            pkg_name=$(node -p "require('./${pkg_dir}/package.json').name")
+            pkg_ver=$(node -p "require('./${pkg_dir}/package.json').version")
+            if npm view "${pkg_name}@${pkg_ver}" version >/dev/null 2>&1; then
+              echo "Skipping ${pkg_name}@${pkg_ver} (already published on npm)"
+            else
+              rm -f /tmp/npm-dist/*.tgz
+              (cd "$pkg_dir" && pnpm pack --pack-destination /tmp/npm-dist)
+              tarball=$(ls /tmp/npm-dist/*.tgz)
+              echo "Publishing ${pkg_name}@${pkg_ver} (${tarball}) via OIDC Trusted Publishing..."
+              npm publish "$tarball" --provenance --access public
+            fi
+          done
+
+  publish-pypi:
+    name: Build & Publish Python SDK to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
+      - name: Build Python Wheel and sdist
+        working-directory: packages/python-sdk
+        run: uv build
+      - name: Publish to PyPI via Trusted Publisher (OIDC)
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          packages-dir: packages/python-sdk/dist/
+          skip-existing: true
+
+  publish-mcp-registry:
+    name: Publish @sentryrelay/mcp to Official MCP Registry (OIDC)
+    needs: [publish-npm]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    env:
+      MCP_PUBLISHER_VERSION: v1.8.19
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check if MCP Registry version is already published
+        id: check
+        run: |
+          server_name=$(node -p "encodeURIComponent(require('./packages/mcp/server.json').name)")
+          server_ver=$(node -p "require('./packages/mcp/server.json').version")
+          echo "server_name=${server_name}" >> "$GITHUB_OUTPUT"
+          echo "server_ver=${server_ver}" >> "$GITHUB_OUTPUT"
+          status_code=$(curl -sS -o /dev/null -w "%{http_code}" \
+            "https://registry.modelcontextprotocol.io/v0.1/servers/${server_name}/versions/${server_ver}")
+          if [ "$status_code" = "200" ]; then
+            echo "Skipping io.github.sentryrelay/sentryrelay@${server_ver} (already published on MCP Registry)"
+            echo "already_published=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "Publishing version ${server_ver} (registry status: ${status_code})"
+            echo "already_published=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install cosign
+        if: steps.check.outputs.already_published != 'true'
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Download and verify mcp-publisher
+        if: steps.check.outputs.already_published != 'true'
+        run: |
+          set -euo pipefail
+          os="$(uname -s | tr '[:upper:]' '[:lower:]')"
+          arch="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
+          archive="mcp-publisher_${os}_${arch}.tar.gz"
+          base_url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+
+          curl --fail --location --silent --show-error --output "$archive" "${base_url}/${archive}"
+          curl --fail --location --silent --show-error --output "${archive}.sigstore.json" "${base_url}/${archive}.sigstore.json"
+
+          cosign verify-blob \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            --certificate-identity-regexp "https://github.com/modelcontextprotocol/registry/.github/workflows/.+" \
+            --bundle "${archive}.sigstore.json" \
+            "$archive"
+
+          tar -xzf "$archive" mcp-publisher
+          chmod +x mcp-publisher
+
+      - name: Validate server.json
+        if: steps.check.outputs.already_published != 'true'
+        run: ./mcp-publisher validate packages/mcp/server.json
+
+      - name: Login to MCP Registry via GitHub OIDC
+        if: steps.check.outputs.already_published != 'true'
+        run: ./mcp-publisher login github-oidc
+
+      - name: Publish to Official MCP Registry
+        if: steps.check.outputs.already_published != 'true'
+        run: ./mcp-publisher publish packages/mcp/server.json

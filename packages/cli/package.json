@@ -1,0 +1,52 @@
+{
+  "name": "sentryrelay",
+  "version": "0.2.0",
+  "type": "module",
+  "description": "Official srelay command-line interface for Sentry Relay — Out-of-Band 2FA, OTP, Magic-Link & TOTP CLI",
+  "license": "MIT",
+  "homepage": "https://sentryrelay.com/docs",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sentryrelay/sentryrelay.git",
+    "directory": "packages/cli"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "keywords": [
+    "sentryrelay",
+    "srelay",
+    "cli",
+    "2fa",
+    "otp",
+    "totp",
+    "magic-link",
+    "ai-agents",
+    "automation"
+  ],
+  "bin": {
+    "srelay": "./dist/bin.js"
+  },
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "prettier --check \"src/**/*.ts\" \"test/**/*.ts\"",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@sentryrelay/sdk": "workspace:*",
+    "commander": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

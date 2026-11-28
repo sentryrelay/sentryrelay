@@ -1,0 +1,21 @@
+{
+  "$schema": "https://skills.sh/schemas/skills.sh.schema.json",
+  "notGrouped": "bottom",
+  "groupings": [
+    {
+      "title": "Start here",
+      "description": "Core Sentry Relay MCP, TypeScript/Python SDK, and srelay CLI workflows for Email/SMS OTP, magic links, and Cloud KMS TOTP.",
+      "skills": ["sentryrelay"]
+    },
+    {
+      "title": "Headless browser 2FA automation",
+      "description": "Self-healing Browserbase Contexts, Stagehand, Playwright, Browser Use, Steel, Kernel, and 1Password co-deployment recipes.",
+      "skills": ["sentryrelay-browser-2fa"]
+    },
+    {
+      "title": "Multi-client agencies & email forwarding",
+      "description": "60-second Zero-Edit Gmail/Outlook forwarding, scoped per-client API keys, and Human-Fallback Safety Bridge setups for n8n, Make, and Apify.",
+      "skills": ["sentryrelay-agency-forwarding"]
+    }
+  ]
+}

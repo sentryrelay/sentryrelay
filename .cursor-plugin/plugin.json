@@ -1,0 +1,23 @@
+{
+  "name": "sentryrelay",
+  "version": "0.2.1",
+  "description": "Out-of-band 2FA, Email OTP, Magic-Link, dedicated US SMS DID, and Cloud KMS TOTP relay for autonomous AI browser agents.",
+  "author": {
+    "name": "Sentry Relay",
+    "email": "support@sentryrelay.com",
+    "url": "https://sentryrelay.com"
+  },
+  "keywords": [
+    "sentryrelay",
+    "2fa",
+    "otp",
+    "totp",
+    "sms",
+    "magic-link",
+    "playwright",
+    "stagehand",
+    "browser-use",
+    "mcp"
+  ],
+  "logo": "assets/logo.svg"
+}
